@@ -1,18 +1,27 @@
-import { getUser } from "@/lib/auth/get-user";
-import { logoutAction } from "@/lib/auth/actions";
-import { Button } from "@/components/ui/button";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { CreateProductModal } from "@/components/products/create-product-modal";
+import { ProductCard } from "@/components/products/product-card";
 
 export default async function DashboardPage() {
-  const user = await getUser();
+  const supabase = await createSupabaseServerClient();
+
+  const { data: products } = await supabase
+    .from("products")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-      <p className="mt-2">Logged in as {user?.email}</p>
+    <div className="p-8 space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">My Products</h1>
+        <CreateProductModal />
+      </div>
 
-      <form action={logoutAction}>
-        <Button className="mt-4 cursor-pointer">Logout</Button>
-      </form>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {products?.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
     </div>
   );
 }
