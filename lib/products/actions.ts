@@ -28,8 +28,6 @@ export async function createProduct(formData: FormData) {
       .from("product-images")
       .upload(filePath, image);
 
-    console.log(uploadError);
-
     if (uploadError) {
       return { error: uploadError.message };
     }
@@ -66,6 +64,6 @@ export async function deleteProduct(id: string) {
     return { error: error.message };
   }
 
-  revalidatePath("/dashboard");
+  // revalidatePath("/dashboard");
   return { success: true };
 }

@@ -4,12 +4,14 @@ import { useTransition } from "react";
 import { deleteProduct } from "@/lib/products/actions";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Props {
   productId: string;
 }
 
 export function DeleteProductButton({ productId }: Props) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = () => {
@@ -23,6 +25,7 @@ export function DeleteProductButton({ productId }: Props) {
         toast.error(res.error);
       } else {
         toast.success("Product deleted");
+        router.push("/dashboard");
       }
     });
   };
